@@ -18,7 +18,7 @@
     <ClCompile Include="Interloper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PcapGather.cpp">
+    <ClCompile Include="CapturePackets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InterfaceSelector.cpp">
@@ -26,7 +26,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="PcapGather.h">
+    <ClInclude Include="CapturePackets.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="InterfaceSelector.h">

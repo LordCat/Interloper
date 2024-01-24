@@ -30,7 +30,7 @@ std::string InterfaceSelector::chooseInterface() {
 	std::cout << "Available interfaces:\n";
 	for (std::vector<std::string>::iterator it = availableInterface.begin(); it != availableInterface.end(); ++it) {
 		
-		std::cout << index++ << *it << std::endl;
+		std::cout << index++ << ": " << *it << std::endl;
 	}
 
 	//promtp the user to choose an interface
