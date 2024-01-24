@@ -21,9 +21,15 @@
     <ClCompile Include="PcapGather.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="InterfaceSelector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PcapGather.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceSelector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
