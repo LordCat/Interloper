@@ -1,29 +1,16 @@
-// Interloper.cpp : This file contains the 'main' function. Program execution begins and ends there.
-// ----------------------------------------------------------------
-// It is intended to be a tool that allows for manual packet analysis and processing of packets
-// The tool is called Interloper but it basically taps the loopback or selected interface and will run in the background providing data
-// for the user to perform other actions.
-// ----------------------------------------------------------------
-
-
-
 #include <iostream>
 #include "InterfaceSelector.h"
-
-
+#include "capturePackets.h"
 
 int main()
 {
-
     bool exit = true;
-    std::string selectedInterface = "None"; //default setting is none. 
+    std::string selectedInterface = "None"; // Default setting is none.
     std::cout << "Hello World!\n";
-	
 
-    while (exit == true) {
+    while (exit) {
 
         std::cout << "Selected Interface: " << selectedInterface << "\n";
-
 
         std::cout << "What would you like to do?\n";
         std::cout << "1: Packet Capture\n";
@@ -33,13 +20,25 @@ int main()
         int input;
         std::cin >> input;
 
-
         switch (input) {
         case 1:
+        {
             std::cout << "Packet Capture Selected\n";
+
+            // Create an instance of capturePacket with the selectedInterface
+            capturePacket packetCapture(selectedInterface);
+
+            std::cout << "Instants started with " << selectedInterface << std::endl;
+
+            // Start the packet capture coroutine
+            auto captureCoroutine = packetCapture.startCapture();
+
+            std::cout << "Packet capture started with " << selectedInterface << std::endl;
             break;
+        }
+        
         case 2:
-			selectedInterface = InterfaceSelector::chooseInterface();
+            selectedInterface = InterfaceSelector::chooseInterface();
             break;
         case 3:
             std::cout << "Exiting Program\n";
@@ -49,4 +48,6 @@ int main()
             break;
         }
     }
+
+    return 0;
 }

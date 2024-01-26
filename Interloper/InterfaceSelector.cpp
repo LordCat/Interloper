@@ -1,50 +1,55 @@
 #include "InterfaceSelector.h"
-
 #include <pcap/pcap.h>
 #include <iostream>
 #include <vector>
+#include <limits>
 
 std::string InterfaceSelector::chooseInterface() {
+    pcap_if_t* alldevs;
+    char errbuf[PCAP_ERRBUF_SIZE];
+    std::vector<std::string> availableInterfaces;
 
-	pcap_if_t* alldevs;
-	char errbuf[PCAP_ERRBUF_SIZE];
-	std::vector<std::string> availableInterface;
+    // Retrieve the list of available network interfaces
+    if (pcap_findalldevs(&alldevs, errbuf) == -1) {
+        std::cerr << "Error finding devices: " << errbuf << std::endl;
+        return "";
+    }
 
-	//retrive the list of available network interfaces
+    // Store the interface names in a vector
+    for (pcap_if_t* dev = alldevs; dev != NULL; dev = dev->next) {
+        availableInterfaces.push_back(dev->name);
+    }
 
-	if (pcap_findalldevs(&alldevs, errbuf) == -1) {
-		std::cerr << "Error finding devices: " << errbuf << std::endl;
-		return "";
-	}
+    // Free the device list
+    pcap_freealldevs(alldevs);
 
-	//store the interface names in a vector
-	for (pcap_if_t* dev = alldevs; dev != NULL; dev = dev->next) {
-		availableInterface.push_back(dev->name);
-	}
+    // Display interface options
+    if (availableInterfaces.empty()) {
+        std::cerr << "No network interfaces found." << std::endl;
+        return "";
+    }
 
-	//Free the device list
-	pcap_freealldevs(alldevs);
+    std::cout << "Available interfaces:\n";
+    for (size_t i = 0; i < availableInterfaces.size(); ++i) {
+        std::cout << i + 1 << ": " << availableInterfaces[i] << std::endl;
+    }
 
-	//display interface options
-	int index = 0;
-	std::cout << "Available interfaces:\n";
-	for (std::vector<std::string>::iterator it = availableInterface.begin(); it != availableInterface.end(); ++it) {
-		
-		std::cout << index++ << ": " << *it << std::endl;
-	}
+    // Prompt the user to choose an interface
+    int selectedInterfaceIndex;
+    std::cout << "Enter the interface number to capture (0 to cancel): ";
+    std::cin >> selectedInterfaceIndex;
 
-	//promtp the user to choose an interface
-	int selectedInterfaceIndex;
-	std::cout << "Enter the interface number to capture: ";
-	std::cin >> selectedInterfaceIndex;
+    // Validate the selected index
+    if (selectedInterfaceIndex == 0) {
+        std::cout << "Interface selection canceled." << std::endl;
+        return "";
+    }
 
-	//validate the selected index
-	if (selectedInterfaceIndex < 0 || selectedInterfaceIndex > static_cast<int>(availableInterface.size())) {
-		std::cerr << "Invalid interface number" << std::endl; 
-		return "";
-	}
-	//return the selected interface
-	return availableInterface[selectedInterfaceIndex];
+    if (selectedInterfaceIndex < 1 || static_cast<size_t>(selectedInterfaceIndex) > availableInterfaces.size()) {
+        std::cerr << "Invalid interface number" << std::endl;
+        return "";
+    }
 
-
+    // Return the selected interface
+    return availableInterfaces[selectedInterfaceIndex];
 }

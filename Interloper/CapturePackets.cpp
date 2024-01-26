@@ -6,6 +6,7 @@
 capturePacket::capturePacket(const std::string& sInterface) : selectedInterface(sInterface) {}
 
 capturePacket::CaptureCoroutine capturePacket::startCapture() {
+    co_await std::suspend_always{};
     co_return;
 }
 
@@ -16,6 +17,9 @@ void capturePacket::startCaptureAsync(std::coroutine_handle<> coroutine) {
 
     // Open the network interface for capturing
     pcapHandle = pcap_open_live(selectedInterface.c_str(), BUFSIZ, 1, 1000, errbuf);
+    
+
+    std::cout << "Interface is open" << std::endl;
 
     if (pcapHandle == nullptr) {
         std::cerr << "Error Opening Interface: " << errbuf << std::endl;
