@@ -8,7 +8,8 @@ WORKDIR /
 COPY . .
 
 # Install the dependencies
-RUN npm install
+RUN npm cache clean --force
+RUN npm install --force
 
 # Copy the rest of the application code to the working directory
 COPY . .
