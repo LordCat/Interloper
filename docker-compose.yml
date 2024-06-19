@@ -1,0 +1,40 @@
+services:
+  frontend:
+    build: 
+      context: ./1_Frontend
+      dockerfile: dockerfile
+    ports:
+      - "3001:3001"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./2_Backend
+      dockerfile: dockerfile
+    ports:
+      - "3002:3002"
+    depends_on:
+      - redis
+      - postgres
+    volumes:
+      - ./2_Backend:/app
+      - /app/node_modules
+
+  redis:
+    image: redis
+    volumes:
+      - ./3_Redis_Layer/redis-data:/data
+    ports:
+      - "6379:6379"
+
+  postgres:
+    image: postgres
+    volumes:
+      - ./4_PostgreSQL_Database/postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
